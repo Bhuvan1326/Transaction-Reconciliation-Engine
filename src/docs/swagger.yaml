@@ -1,243 +1,256 @@
-openapi: 3.0.3
+openapi: 3.0.0
+
 info:
   title: Transaction Reconciliation Engine API
-  description: API for reconciling user and exchange transaction CSV files
   version: 1.0.0
+  description: API for reconciling user and exchange transaction CSV files
+
 servers:
   - url: http://localhost:3000
     description: Local development
 
+  - url: https://transaction-reconciliation-engine-fna4.onrender.com
+    description: Production
+
 paths:
   /health:
     get:
+      tags:
+        - Health
       summary: Health check
-      tags: [Health]
       responses:
-        '200':
-          description: Service is healthy
+        200:
+          description: Service health status
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HealthResponse'
-              example:
-                status: ok
-                uptime: 123.456
-                timestamp: '2024-03-10T12:00:00.000Z'
+                type: object
+                properties:
+                  status:
+                    type: string
+                  uptime:
+                    type: number
+                  timestamp:
+                    type: string
 
   /api/v1/reconcile:
     post:
+      tags:
+        - Reconciliation
       summary: Start reconciliation job
-      tags: [Reconciliation]
       requestBody:
         required: true
         content:
           multipart/form-data:
             schema:
               type: object
-              required: [userFile, exchangeFile]
+              required:
+                - userFile
+                - exchangeFile
               properties:
                 userFile:
                   type: string
                   format: binary
                   description: User transactions CSV
+
                 exchangeFile:
                   type: string
                   format: binary
                   description: Exchange transactions CSV
+
                 timestampToleranceSeconds:
                   type: integer
-                  example: 300
+                  default: 300
+
                 quantityTolerancePct:
                   type: number
-                  example: 0.01
+                  default: 0.01
+
       responses:
-        '202':
+        202:
           description: Reconciliation job accepted
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ReconciliationStartResponse'
-              example:
-                runId: '665f1a2b3c4d5e6f7a8b9c0d'
-                status: running
-        '400':
+                type: object
+                properties:
+                  runId:
+                    type: string
+                  status:
+                    type: string
+
+        400:
           description: Validation error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                error: ValidationError
-                message: userFile is required
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
 
   /api/v1/reconcile/{runId}:
     get:
+      tags:
+        - Reconciliation
       summary: Get reconciliation run status
-      tags: [Reconciliation]
+
       parameters:
-        - name: runId
-          in: path
+        - in: path
+          name: runId
           required: true
           schema:
             type: string
+
       responses:
-        '200':
+        200:
           description: Run status and summary
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ReconciliationStatusResponse'
-              example:
-                runId: '665f1a2b3c4d5e6f7a8b9c0d'
-                status: completed
-                startedAt: '2024-03-10T12:00:00.000Z'
-                completedAt: '2024-03-10T12:00:05.000Z'
-                config:
-                  timestampToleranceSeconds: 300
-                  quantityTolerancePct: 0.01
-                summary:
-                  totalUser: 11
-                  totalExchange: 10
-                  matched: 6
-                  conflicting: 1
-                  unmatchedUser: 2
-                  unmatchedExchange: 1
-                  dataQualityIssues: 5
-                reportPath: reports/reconciliation_665f1a2b3c4d5e6f7a8b9c0d.csv
-        '404':
+                type: object
+                properties:
+                  runId:
+                    type: string
+
+                  status:
+                    type: string
+
+                  startedAt:
+                    type: string
+
+                  completedAt:
+                    type: string
+
+                  config:
+                    type: object
+                    properties:
+                      timestampToleranceSeconds:
+                        type: integer
+
+                      quantityTolerancePct:
+                        type: number
+
+                  summary:
+                    type: object
+                    properties:
+                      totalUser:
+                        type: integer
+
+                      totalExchange:
+                        type: integer
+
+                      matched:
+                        type: integer
+
+                      conflicting:
+                        type: integer
+
+                      unmatchedUser:
+                        type: integer
+
+                      unmatchedExchange:
+                        type: integer
+
+                      dataQualityIssues:
+                        type: integer
+
+                  reportPath:
+                    type: string
+
+        404:
           description: Run not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
 
   /api/v1/reconcile/{runId}/report:
     get:
+      tags:
+        - Reconciliation
       summary: Download reconciliation report CSV
-      tags: [Reconciliation]
+
       parameters:
-        - name: runId
-          in: path
+        - in: path
+          name: runId
           required: true
           schema:
             type: string
+
       responses:
-        '200':
+        200:
           description: CSV report stream
           content:
             text/csv:
               schema:
                 type: string
-                format: binary
-        '404':
+
+        404:
           description: Report not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
 
   /api/v1/reconcile/{runId}/issues:
     get:
+      tags:
+        - Reconciliation
       summary: Get paginated data quality issues
-      tags: [Reconciliation]
+
       parameters:
-        - name: runId
-          in: path
+        - in: path
+          name: runId
           required: true
           schema:
             type: string
-        - name: page
-          in: query
+
+        - in: query
+          name: page
           schema:
             type: integer
             default: 1
-        - name: limit
-          in: query
+
+        - in: query
+          name: limit
           schema:
             type: integer
             default: 50
+
       responses:
-        '200':
+        200:
           description: Paginated quality issues
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QualityIssuesResponse'
-              example:
-                runId: '665f1a2b3c4d5e6f7a8b9c0d'
-                page: 1
-                limit: 50
-                total: 5
-                items:
-                  - source: user
-                    rowIndex: 2
-                    transactionId: USR-001
-                    reason: duplicate_transaction_id
-                    severity: warning
-        '404':
-          description: Run not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                type: object
+                properties:
+                  runId:
+                    type: string
 
-components:
-  schemas:
-    HealthResponse:
-      type: object
-      properties:
-        status:
-          type: string
-        uptime:
-          type: number
-        timestamp:
-          type: string
-          format: date-time
-    ReconciliationStartResponse:
-      type: object
-      properties:
-        runId:
-          type: string
-        status:
-          type: string
-    ReconciliationStatusResponse:
-      type: object
-      properties:
-        runId:
-          type: string
-        status:
-          type: string
-        startedAt:
-          type: string
-          format: date-time
-        completedAt:
-          type: string
-          format: date-time
-        config:
-          type: object
-        summary:
-          type: object
-        reportPath:
-          type: string
-    QualityIssuesResponse:
-      type: object
-      properties:
-        runId:
-          type: string
-        page:
-          type: integer
-        limit:
-          type: integer
-        total:
-          type: integer
-        items:
-          type: array
-          items:
-            type: object
-    ErrorResponse:
-      type: object
-      properties:
-        error:
-          type: string
-        message:
-          type: string
+                  page:
+                    type: integer
+
+                  limit:
+                    type: integer
+
+                  total:
+                    type: integer
+
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        source:
+                          type: string
+
+                        rowIndex:
+                          type: integer
+
+                        transactionId:
+                          type: string
+
+                        reason:
+                          type: string
+
+                        severity:
+                          type: string
+
+        404:
+          description: Run not found
