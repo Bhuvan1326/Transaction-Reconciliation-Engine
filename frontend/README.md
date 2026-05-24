@@ -1,6 +1,13 @@
 # Transaction Reconciliation Engine — Frontend
 
-Production-grade React dashboard for the [Transaction Reconciliation Engine](https://transaction-reconciliation-engine-fna4.onrender.com) API. Upload user and exchange CSV files, configure matching tolerances, poll run status, and download reconciliation reports.
+Production-grade React dashboard for the Transaction Reconciliation Engine API. Upload user and exchange CSV files, configure matching tolerances, poll run status, and download reconciliation reports.
+
+## Live Demo
+
+| | Link |
+|---|------|
+| **Dashboard (Vercel)** | [https://transaction-reconciliation-engine.vercel.app/](https://transaction-reconciliation-engine.vercel.app/) |
+| **API docs (Render)** | [https://transaction-reconciliation-engine-fna4.onrender.com/api-docs/](https://transaction-reconciliation-engine-fna4.onrender.com/api-docs/) |
 
 ## Tech Stack
 
@@ -84,15 +91,14 @@ and rely on the proxy, or point explicitly at your backend.
 
 3. Start the frontend: `npm run dev`
 
-### Deployed backend (Render)
+### Deployed (production)
 
-The API is live at:
-
-- **Base URL:** [https://transaction-reconciliation-engine-fna4.onrender.com](https://transaction-reconciliation-engine-fna4.onrender.com)
-- **Swagger:** [https://transaction-reconciliation-engine-fna4.onrender.com/api-docs](https://transaction-reconciliation-engine-fna4.onrender.com/api-docs)
+- **Frontend:** [https://transaction-reconciliation-engine.vercel.app/](https://transaction-reconciliation-engine.vercel.app/)
+- **Backend base URL:** [https://transaction-reconciliation-engine-fna4.onrender.com](https://transaction-reconciliation-engine-fna4.onrender.com)
+- **Swagger:** [https://transaction-reconciliation-engine-fna4.onrender.com/api-docs/](https://transaction-reconciliation-engine-fna4.onrender.com/api-docs/)
 - **Health:** [https://transaction-reconciliation-engine-fna4.onrender.com/health](https://transaction-reconciliation-engine-fna4.onrender.com/health)
 
-Set `VITE_API_BASE_URL` to that URL and run `npm run dev` or deploy the `dist/` folder to any static host (Vercel, Netlify, Render static site, etc.).
+For local dev, set `VITE_API_BASE_URL` to the Render base URL (or `http://localhost:3000`). To deploy your own build, publish `dist/` to Vercel or any static host with the same env var.
 
 > **CORS:** The backend enables CORS for browser clients. Ensure your static frontend origin is allowed if you add custom CORS rules later.
 
