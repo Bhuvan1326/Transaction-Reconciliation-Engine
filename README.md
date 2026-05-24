@@ -4,8 +4,7 @@ Full-stack reconciliation platform: a Node.js API that ingests user and exchange
 
 ## Live Demo
 
-| | Link |
-|---|------|
+
 | **Frontend (Vercel)** | [https://transaction-reconciliation-engine.vercel.app/](https://transaction-reconciliation-engine.vercel.app/) |
 | **Backend API docs (Render)** | [https://transaction-reconciliation-engine-fna4.onrender.com/api-docs/](https://transaction-reconciliation-engine-fna4.onrender.com/api-docs/) |
 
