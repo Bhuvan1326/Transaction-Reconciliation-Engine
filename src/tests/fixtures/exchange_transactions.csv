@@ -1,0 +1,11 @@
+transaction_id,timestamp,type,asset,quantity,price_usd,fee,note
+EXC-1001,2024-03-01T10:00:05Z,BUY,BTC,0.5,42000.00,5.25,Exchange buy match
+EXC-1002,2024-03-02T14:30:02Z,SELL,ETH,2.0,2500.00,3.75,Exchange sell match
+EXC-1003,2024-03-03T09:15:03Z,TRANSFER_IN,BTC,0.1,43000.00,1.10,Transfer in perspective
+EXC-1004,2024-03-04T11:00:01Z,BUY,SOL,10.0,100.00,0.55,Sol match
+EXC-1005,2024-03-05T08:00:02Z,BUY,BTC,0.20002,44000.00,2.10,Boundary quantity match
+EXC-1006,2024-03-08T16:00:01Z,BUY,BTC,0.05,45000.00,1.05,Malformed ts exchange
+EXC-1007,2024-03-10T13:00:00Z,SELL,BTC,0.15,45600.00,3.00,Exchange only unmatched
+EXC-1010,2024-03-06T10:00:01Z,BUY,BTC,1.0,43500.00,10.50,Tie break candidate B same score
+EXC-1011,2024-03-06T10:00:02Z,BUY,BTC,1.0,43500.00,10.50,Tie break candidate C same score
+EXC-1012,2024-03-07T10:05:00Z,SELL,ETH,5.5,2550.00,5.50,Quantity conflict exchange

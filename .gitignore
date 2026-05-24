@@ -1,0 +1,14 @@
+node_modules/
+.env
+logs/*.log
+uploads/**/*
+!uploads/user/.gitkeep
+!uploads/exchange/.gitkeep
+reports/*
+!reports/.gitkeep
+coverage/
+src/tests/setup/.mongo-meta.json
+.DS_Store
+*.swp
+.idea/
+.vscode/

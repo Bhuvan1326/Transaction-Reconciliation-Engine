@@ -1,0 +1,11 @@
+node_modules
+npm-debug.log
+logs
+uploads
+reports
+coverage
+.git
+.env
+*.md
+src/tests
+jest.config.js
