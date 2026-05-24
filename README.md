@@ -1,13 +1,37 @@
 # Transaction Reconciliation Engine
 
-Production-ready Node.js service that ingests user and exchange transaction CSV files, flags data quality issues, matches transactions across sources, and produces downloadable reconciliation reports.
+Full-stack reconciliation platform: a Node.js API that ingests user and exchange transaction CSVs, flags data quality issues, matches transactions across sources, and produces downloadable reports — plus a React dashboard for uploads, tolerance configuration, live status polling, and report downloads.
+
+## Live Demo
+
+| | Link |
+|---|------|
+| **Frontend (Vercel)** | [https://transaction-reconciliation-engine.vercel.app/](https://transaction-reconciliation-engine.vercel.app/) |
+| **Backend API docs (Render)** | [https://transaction-reconciliation-engine-fna4.onrender.com/api-docs/](https://transaction-reconciliation-engine-fna4.onrender.com/api-docs/) |
+
+### Backend (Render)
+
+| Service | URL |
+|---------|-----|
+| **API base** | [https://transaction-reconciliation-engine-fna4.onrender.com](https://transaction-reconciliation-engine-fna4.onrender.com) |
+| **Swagger UI** | [https://transaction-reconciliation-engine-fna4.onrender.com/api-docs/](https://transaction-reconciliation-engine-fna4.onrender.com/api-docs/) |
+| **Health** | [https://transaction-reconciliation-engine-fna4.onrender.com/health](https://transaction-reconciliation-engine-fna4.onrender.com/health) |
+
+The [deployed dashboard](https://transaction-reconciliation-engine.vercel.app/) calls this API. For local development, set `VITE_API_BASE_URL` in `frontend/.env` — see [frontend/README.md](frontend/README.md).
 
 ## Stack
+
+**Backend**
 
 - Node.js 20, Express, MongoDB (Mongoose)
 - Streaming CSV: `csv-parse`, `csv-stringify`
 - Validation: Joi | Logging: Winston | Tests: Jest | API docs: Swagger UI
 - Docker & Docker Compose
+
+**Frontend** (`frontend/`)
+
+- React 18, Vite, TypeScript, Tailwind CSS
+- Axios, React Hook Form, TanStack React Query, Framer Motion, Lucide React
 
 ## Quick Start
 
@@ -20,6 +44,17 @@ npm start
 API: `http://localhost:3000`  
 Swagger: `http://localhost:3000/api-docs`  
 Health: `http://localhost:3000/health`
+
+### Frontend
+
+```bash
+cd frontend
+cp .env.example .env   # VITE_API_BASE_URL=http://localhost:3000
+npm install
+npm run dev
+```
+
+Dashboard: `http://localhost:5173`
 
 ### Docker
 
@@ -96,7 +131,32 @@ Row-level problems (invalid quantity, bad timestamp, duplicates, parse errors) a
 
 ## Project Structure
 
-See repository tree in source — layered as config, controllers, routes, middlewares, validators, services, jobs, models, repositories, and utils.
+```
+transaction-reconciliation-engine/
+├── src/                    # Backend (Express API)
+│   ├── controllers/
+│   ├── routes/
+│   ├── services/
+│   ├── repositories/
+│   ├── models/
+│   ├── jobs/
+│   ├── middlewares/
+│   ├── validators/
+│   └── utils/
+├── frontend/               # React + Vite dashboard
+│   └── src/
+│       ├── components/
+│       ├── pages/
+│       ├── hooks/
+│       ├── services/
+│       ├── layouts/
+│       ├── utils/
+│       └── types/
+├── docker-compose.yml
+└── Dockerfile
+```
+
+Backend layers: config → routes → controllers → services → repositories → MongoDB.
 
 ## License
 
